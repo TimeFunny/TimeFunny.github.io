@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>Debug in Linux | Personal Blog Web</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="" />
+    
+    <meta name="description" content="Debug in Linux  Tool list GDB TUI(Test User Interface) top tips using python in gdb In-built pretty printers for STL .gdbinit gdb is built atop ptrace and signals Breakpoints and watchpoints thread">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Debug in Linux">
+<meta property="og:url" content="http://yoursite.com/2020/07/11/Linux/Debug%20in%20Linux/index.html">
+<meta property="og:site_name" content="Personal Blog Web">
+<meta property="og:description" content="Debug in Linux  Tool list GDB TUI(Test User Interface) top tips using python in gdb In-built pretty printers for STL .gdbinit gdb is built atop ptrace and signals Breakpoints and watchpoints thread">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-07-11T01:35:01.000Z">
+<meta property="article:modified_time" content="2020-07-20T16:31:52.374Z">
+<meta property="article:author" content="YANG Tao">
+<meta property="article:tag" content="Computer Vision  Machine Learning">
+<meta name="twitter:card" content="summary">
+    
+
+    
+        <link rel="alternate" href="/" title="Personal Blog Web" type="application/atom+xml" />
+    
+
+    
+
+    
+<link rel="stylesheet" href="../../../../../libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="../../../../../libs/titillium-web/styles.css">
+
+    
+<link rel="stylesheet" href="../../../../../libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="../../../../../css/style.css">
+
+
+    
+<script src="../../../../../libs/jquery/2.0.3/jquery.min.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="../../../../../libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="../../../../../libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="../../../../../index.html" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="../../../../../index.html">Home</a>
+                                </li>
+                            
+                                        <ul class="main-nav-list"><li class="main-nav-list-item"><a class="main-nav-list-link" href="../../../../../categories/Programming/">Programming</a></li></ul>
+                                    
+                                <li class="main-nav-list-item" >
+                                    <a class="main-nav-list-link" href="../../../../../about/index.html">About</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '../../../../../content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="../../../../../js/insight.js"></script>
+
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    uncategorized
+    </h1>
+</div>
+                        <div class="main-body-content">
+                            <article id="post-Linux/Debug in Linux" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        Debug in Linux
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="" class="article-date">
+            <time datetime="2020-07-11T01:35:01.000Z" itemprop="datePublished">2020-07-11</time>
+        </a>
+    </div>
+
+                
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <div class="toc">
+<!-- toc -->
+<ul>
+<li><a href="#debug-in-linux">Debug in Linux</a>
+<ul>
+<li><a href="#tool-list">Tool list</a></li>
+<li><a href="#gdb-tui-test-user-interface-top-tips">GDB TUI(Test User Interface) top tips</a></li>
+<li><a href="#using-python-in-gdb">using python in gdb</a></li>
+<li><a href="#in-built-pretty-printers-for-stl">In-built pretty printers for STL</a></li>
+<li><a href="#gdbinit">.gdbinit</a></li>
+<li><a href="#gdb-is-built-atop-ptrace-and-signals">gdb is built atop ptrace and signals</a></li>
+<li><a href="#breakpoints-and-watchpoints">Breakpoints and watchpoints</a></li>
+<li><a href="#thread-apply">thread apply</a></li>
+<li><a href="#dynamic-printf">Dynamic Printf</a></li>
+<li><a href="#calling">calling</a></li>
+<li><a href="#catchpoints">Catchpoints</a></li>
+<li><a href="#remote-debugging">Remote Debugging</a></li>
+<li><a href="#multiprocess-debugging">Multiprocess Debugging</a></li>
+<li><a href="#yet-more-python">Yet More Python</a></li>
+<li><a href="#reverse-execution-recording-inferior-s-execution-and-replaying-it">reverse execution</a></li>
+<li><a href="#other-cool-things">Other cool things…</a></li>
+<li><a href="#valgrind">Valgrind</a></li>
+<li><a href="#sanitizers">Sanitizers</a></li>
+<li><a href="#ftrace">ftrace</a></li>
+<li><a href="#strace">strace</a></li>
+<li><a href="#ltrace">ltrace</a></li>
+<li><a href="#perf-trace">perf trace</a></li>
+<li><a href="#fortify-jia-gu">Fortify(加固)</a></li>
+<li><a href="#nm"><code>nm</code></a></li>
+</ul>
+</li>
+</ul>
+<!-- tocstop -->
+</div>
+<h1><span id="p-debug-in-linux"> Debug in Linux</span><a href="#p-debug-in-linux" class="header-anchor">#</a></h1>
+<h2><span id="p-tool-list"> Tool list</span><a href="#p-tool-list" class="header-anchor">#</a></h2>
+<p><strong>performance profiling</strong>: perf trace,  ftrace, strace, lstrace</p>
+<p>Two main classes of debugging tool today:</p>
+<ul>
+<li>
+<p>checker (static and dynamic)</p>
+<p>did my code do bad thing x, y, z?</p>
+<p><strong>Examples:</strong> Address Sanitizer,  Valgrind, Converity</p>
+</li>
+<li>
+<p>Debuggers</p>
+<p>what exactly did my code do?</p>
+<p><strong>Examples:</strong> GDG,  LLDB,  <a target="_blank" rel="noopener" href="https://rr-project.org/">rr</a>,  UndoDB,  Live Recorder</p>
+</li>
+</ul>
+<p>GDB:</p>
+<p>-ggdb3 is better than -g</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 编译debug info</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> g++ -g</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> more info</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> gcc -ggdb3</span> </span><br></pre></td></tr></table></figure>
+<h2><span id="p-gdb-tui-test-user-interface-top-tips"> GDB TUI(Test User Interface) top tips</span><a href="#p-gdb-tui-test-user-interface-top-tips" class="header-anchor">#</a></h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> quick shortcut</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> toggle to/from TUI mode</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> Ctrl-X-A</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> refresh the screen</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> ctrl-l</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> prev, next, commands</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> ctrl-p/ ctrl-n</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> second window, cycle through</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> ctrl-x-2</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> gdb program</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> start</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> list <span class="comment"># show source code</span></span> </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2><span id="p-using-python-in-gdb"> using python in gdb</span><a href="#p-using-python-in-gdb" class="header-anchor">#</a></h2>
+<p>gdb invoke python interpret, but library need be installed in target system. gdb need to find it.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> the gdb python module gives most access to gdb</span></span><br><span class="line">python gdb.excute() to do gdb commands</span><br><span class="line">python gdb.parse_and_eval to get data from inferior</span><br><span class="line">python help(&#x27;gdb&#x27;) to see online help</span><br></pre></td></tr></table></figure>
+<h2><span id="p-in-built-pretty-printers-for-stl"> In-built pretty printers for STL</span><a href="#p-in-built-pretty-printers-for-stl" class="header-anchor">#</a></h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> this relies on Python pretty printers installed on the target system</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> info pretty-printers</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="built_in">print</span> variable-name</span></span><br></pre></td></tr></table></figure>
+<h2><span id="p-gdbinit"> .gdbinit</span><a href="#p-gdbinit" class="header-anchor">#</a></h2>
+<p>Hint: have a project gdbinit with lots of stuff in it, and source that</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">set history save on</span><br><span class="line">set print pretty on</span><br><span class="line">set pagination off</span><br><span class="line">set confirm off</span><br></pre></td></tr></table></figure>
+<h2><span id="p-gdb-is-built-atop-ptrace-and-signals"> gdb is built atop ptrace and signals</span><a href="#p-gdb-is-built-atop-ptrace-and-signals" class="header-anchor">#</a></h2>
+<p>when a program being traced receives a signal, it is suspends and the tracer gets notified(via waitpid).<br>
+So when the inferior receives a signal, it stop and gdb gets control.<br>
+Usually gdb return to the prompt, but what it will do depends on the signal and how it is configured.<br>
+Two signals are special:</p>
+<ul>
+<li>
+<p>SIGINT is generated when you hit ^C</p>
+</li>
+<li>
+<p>SIGTRAP is generated when the inferior hits a breakpoint or is single stepped.</p>
+<p>Actually, not so special, - these signals are treated no differently to any others.</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">set pagination on</span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> info signals</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> handle SIGINT stop <span class="built_in">print</span> pass</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> handle SIGINT stop <span class="built_in">print</span> pass</span></span><br></pre></td></tr></table></figure>
+<h2><span id="p-breakpoints-and-watchpoints"> Breakpoints and watchpoints</span><a href="#p-breakpoints-and-watchpoints" class="header-anchor">#</a></h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> stop when foo is modified</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> watch foo</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> watch location</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> watch -l foo</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> stop when foo is <span class="built_in">read</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> rwatch foo</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> stop when thread 3 modifies foo</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> watch foo thread 3</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> stop when foo is &gt; 10</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> watch foo <span class="keyword">if</span> foo &gt; 10</span></span><br></pre></td></tr></table></figure>
+<h2><span id="p-thread-apply"> thread apply</span><a href="#p-thread-apply" class="header-anchor">#</a></h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> info threads</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> thread apply 1-4 <span class="built_in">print</span> <span class="variable">$sp</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> thread apply all backtrace(bt)</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> thread apply all backtrace full <span class="comment"># more info(local variable)</span></span></span><br></pre></td></tr></table></figure>
+<h2><span id="p-dynamic-printf"> Dynamic Printf</span><a href="#p-dynamic-printf" class="header-anchor">#</a></h2>
+<p>use <code>dprintf</code> to put printf’s  in your code without recompiling, e.g.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dprintf mutex_lock, &quot;m is %p m-&gt;magic is %u\n&quot;, m, m-&gt;magic</span><br></pre></td></tr></table></figure>
+<p>control how the printfs hapen:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="built_in">set</span> dprintf-style gdb|call|agent</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="built_in">set</span> dprintf-function fprintf</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="built_in">set</span> dprintf-channel mylog</span></span><br></pre></td></tr></table></figure>
+<h2><span id="p-calling"> calling</span><a href="#p-calling" class="header-anchor">#</a></h2>
+<p><code>call</code> foo() will call foo in your inferior</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">call strcpy(buffer, &quot;hello, world!\n&quot;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> but beware, `<span class="built_in">print</span>` may well <span class="keyword">do</span> too, e.g.</span></span><br><span class="line"></span><br><span class="line">print foo()</span><br><span class="line"></span><br><span class="line">print foo+bar (if c++)</span><br><span class="line"></span><br><span class="line">print errno</span><br></pre></td></tr></table></figure>
+<h2><span id="p-catchpoints"> Catchpoints</span><a href="#p-catchpoints" class="header-anchor">#</a></h2>
+<p>Catchpoints are like breakpoints but catch certain events, such as c++ exceptions.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> catch catch <span class="comment"># to stop when c++ exceptions are caught</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> catch syscall nanosleep <span class="comment"># to stop at nanosleep system call</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> catch syscall 100 <span class="comment"># to stop at system call number 100</span></span></span><br></pre></td></tr></table></figure>
+<h2><span id="p-remote-debugging"> Remote Debugging</span><a href="#p-remote-debugging" class="header-anchor">#</a></h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Debug over serial/sockets to a remote server</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> start</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> gdbserver localhost:2000 ./program</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Then connect from a gdb with</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> target remote localhost:2000</span></span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> gdbserver localhost:4444 program</span></span><br><span class="line">     Process program created; pid = 5685</span><br><span class="line">     Listening on port 4444</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> gdb program</span></span><br><span class="line">(gdb) target remote targethost:4444</span><br><span class="line">     Remote debugging using targethost:4444</span><br><span class="line">     0x00007f29936d0af0 in ?? () from /lib64/ld-linux-x86-64.so.</span><br><span class="line">(gdb) b foo.adb:3</span><br><span class="line">     Breakpoint 1 at 0x401f0c: file foo.adb, line 3.</span><br><span class="line">(gdb) continue</span><br><span class="line">     Continuing.</span><br></pre></td></tr></table></figure>
+<h2><span id="p-multiprocess-debugging"> Multiprocess Debugging</span><a href="#p-multiprocess-debugging" class="header-anchor">#</a></h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="built_in">set</span> follow-fork-mode child|parent</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="built_in">set</span> detach-on-fork off</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> info inferiors</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> inferior N</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="built_in">set</span> follow-exec-mode new|same</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> add-inferior &lt;count&gt; &lt;name&gt;</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> remove-inferior N</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> clone-inferior</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="built_in">print</span> <span class="variable">$_inferior</span></span></span><br></pre></td></tr></table></figure>
+<h2><span id="p-yet-more-python"> Yet More Python</span><a href="#p-yet-more-python" class="header-anchor">#</a></h2>
+<p>hook certain kinds of events</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stop_handler</span>(<span class="params">ev</span>):</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;stop event!&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(ev, gdb.SignalEvent):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;it is a signal :&quot;</span> + ev.stop_signal)</span><br><span class="line">gdb.events.stop.connect(stop_handler)</span><br></pre></td></tr></table></figure>
+<h2><span id="p-reverse-execution-recording-inferior-s-execution-and-replaying-it"> [reverse execution](Recording Inferior’s Execution and Replaying It)</span><a href="#p-reverse-execution-recording-inferior-s-execution-and-replaying-it" class="header-anchor">#</a></h2>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt; start</span><br><span class="line">&gt; record</span><br><span class="line">&gt; command</span><br><span class="line">&gt; reverse-stepi</span><br><span class="line">&gt; reverse-continue</span><br><span class="line">&gt; whatis</span><br><span class="line">&gt; print sizeof array-name</span><br><span class="line">&gt; ptype </span><br><span class="line"></span><br><span class="line"># please use &#96;rr&#96;</span><br><span class="line">&gt; https:&#x2F;&#x2F;rr-project.org&#x2F;</span><br></pre></td></tr></table></figure>
+<p>GDB inbuilt reversible debugging: Work well, but is very slow</p>
+<p>GDB in-build <code>record btrace</code>: Uses Intel branch trace.</p>
+<p>​		Not really reversible, no data</p>
+<p>​		Quite slow</p>
+<p><code>rr</code>: Very good at what it does, though somewhat limited features/platform support</p>
+<h2><span id="p-other-cool-things"> Other  cool things…</span><a href="#p-other-cool-things" class="header-anchor">#</a></h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> </span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> tbreak             <span class="comment"># temporary breakpoint</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> rbreak             <span class="comment"># reg-ex breakpoint</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="built_in">command</span>            <span class="comment"># list of commands to be executed when breakpoint hit</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> silent             <span class="comment"># special command to suppress output on breakpoint hit</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> save breakpoints   <span class="comment"># save a list of breakpoints to a script</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> save <span class="built_in">history</span>       <span class="comment"># save history of executed gdb commands</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> info line foo.c:42 <span class="comment"># show PC for line</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> info line * <span class="variable">$pc</span>    <span class="comment"># show line begin/end for current program counter</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2><span id="p-valgrind"> Valgrind</span><a href="#p-valgrind" class="header-anchor">#</a></h2>
+<p>memcheck is default and the most used/known.</p>
+<p>Also there is:  cachegrind, callgrind, helgrind, drd, massif, lackey, none</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; valgrind .&#x2F;program</span><br><span class="line"></span><br><span class="line">&gt; valgrind --vgdb --vgdb-error 0 .&#x2F;program</span><br></pre></td></tr></table></figure>
+<h2><span id="p-sanitizers"> Sanitizers</span><a href="#p-sanitizers" class="header-anchor">#</a></h2>
+<p>AddressSanitizer, MemorySanitizer, ThreadSanitizer, LeakSanitizer</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> faster and more powerful</span></span><br><span class="line">clang -g -fsanitize=address foo.c</span><br><span class="line">./a.out</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> or with gcc, like:</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> gcc -g -fsanitize=address -static-libasan foo.c</span></span><br><span class="line">./a.out</span><br></pre></td></tr></table></figure>
+<h2><span id="p-ftrace"> ftrace</span><a href="#p-ftrace" class="header-anchor">#</a></h2>
+<p>“function tracer” - a fast way to trace various kernel functions.</p>
+<ul>
+<li>Lots of pre-defined events(i.e. trace-points)</li>
+<li>Controlled through /sys/kernel/debug/tracing</li>
+<li>Or, use the trace-cmd utility</li>
+</ul>
+<h2><span id="p-strace"> strace</span><a href="#p-strace" class="header-anchor">#</a></h2>
+<p>Trace all the system calls of a process.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> strace cmd          <span class="comment"># Print all system calls issued by cmd</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> strace -k cmd       <span class="comment"># Show backtrace for each syscall</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> strace -t cmd       <span class="comment"># Prefix each syscall with wallclock time</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> strace -o file cmd  <span class="comment"># Write traced syscalls to file</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">strace -D cmd        <span class="comment"># strace process runs as detached grandchild of cmd</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">strace -f cmd        <span class="comment"># Follow forks</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">strace -ff -o f cmd  <span class="comment"># Follow forks, write output to f.%pid</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">strace -p 1234       <span class="comment"># Strace process-id 1234(note: only the thread, not all threads in that process)</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">strace -p 1234 -f    <span class="comment"># Attach to all threads in process-group 1234</span></span></span><br></pre></td></tr></table></figure>
+<h2><span id="p-ltrace"> ltrace</span><a href="#p-ltrace" class="header-anchor">#</a></h2>
+<p>Trace all the dynamic library calls of a process.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ltrace cmd                   # Print all library calls issued by cmd</span><br><span class="line">ltrace -w=4 cmd              # Show backtrace(up to 4 frames)(but only if trace compiled with libunwind)</span><br><span class="line">ltrace -t cmd                # Prefix each library call with wallclock time</span><br><span class="line">ltrace -l libc.so* cmd       # Trace calls to libc library only</span><br><span class="line">ltrace -e malloc+free-@libc.so* cmd  # only trace malloc and free symbols from libc</span><br></pre></td></tr></table></figure>
+<h2><span id="p-perf-trace"> perf trace</span><a href="#p-perf-trace" class="header-anchor">#</a></h2>
+<p>Like strace but better(and worse).</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> perf trace           <span class="comment"># Trace everything - every syscall by every process</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> perf trace cmd       <span class="comment"># Trace all syscalls issued by cmd</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> perf trace -p 1234   <span class="comment"># Trace all syscalls from process 1234</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> perf trace -e <span class="built_in">read</span>*  <span class="comment"># Trace all syscalls that start with &quot;read&quot; (e.g. read, readlink, readdir)</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> perf trace -D 500    <span class="comment"># Wait 500ms before trace (skip all the startup gumf)</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> perf trace record    <span class="comment"># Record into perf.data (this is really for profiling, so won&#x27;t talk about it more!)</span></span></span><br></pre></td></tr></table></figure>
+<p>​	Better than strace: Much faster; more flexible.</p>
+<p>​	Worse than strace: Needs privileges, doesn’t do as much decoding(e.g. strings look like pointers)</p>
+<h2><span id="p-fortify-jia-gu"> Fortify(加固)</span><a href="#p-fortify-jia-gu" class="header-anchor">#</a></h2>
+<p>​	Compile with -D_FORTIFY_SOURCE=1</p>
+<p>​	memcpy, strcpy, et al do bounds checking where they can.</p>
+<p>​	Very low(typically impossible to measure), performance overhead.</p>
+<h2><span id="p-nm"> <code>nm</code></span><a href="#p-nm" class="header-anchor">#</a></h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> You can find out all <span class="built_in">functions</span> defined (but not necessarily called) <span class="keyword">in</span> an application with the nm <span class="built_in">command</span>, e.g.</span></span><br><span class="line">nm /path/to/a.out | egrep &#x27; [TW] &#x27;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> You can also use GDB to <span class="built_in">set</span> a breakpoint on each <span class="keyword">function</span>:</span></span><br><span class="line"></span><br><span class="line">(gdb) set logging on     # collect trace in gdb.txt</span><br><span class="line">(gdb) set confirm off    # you wouldn&#x27;t want to confirm every one of them</span><br><span class="line">(gdb) rbreak .           # set a breakpoint on each function</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> You want a call graph. The tool that you want to use is not gdb, it<span class="string">&#x27;s `gprof`. You compile your program with `-pg` and then run it. When it runs a file gmon.out will be produced. You then process this file with `gprof` and enjoy the output.</span></span></span><br></pre></td></tr></table></figure>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://yoursite.com/2020/07/11/Linux/Debug%20in%20Linux/" data-id="ckmj7572c000yzkf3c6ahc381" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>follow:</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="../../../../../index.html" target="_blank">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="../../../../../index.html" target="_blank">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus" href="../../../../../index.html" target="_blank">
+                        <i class="icon fa fa-google-plus"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="../../../../../https:/github.com/TimeFunny" target="_blank">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="weibo" href="../../../../../index.html" target="_blank">
+                        <i class="icon fa fa-weibo"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="../../../../../index.html" target="_blank">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="../../../17/Linux/Process-Id/" id="article-nav-newer" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">newer</strong>
+        <p class="article-nav-title">
+        
+            Process Id
+        
+        </p>
+        <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
+    </a>
+    
+    
+        <a href="../../../08/Linux/shell-shortcut/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">older</strong>
+        <p class="article-nav-title">shell keyboard shortcut</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">recents</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="../../../20/Linux/gdb/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="../../../20/Linux/gdb/" class="title">gdb</a></p>
+                            <p class="item-date"><time datetime="2020-07-20T15:20:14.000Z" itemprop="datePublished">2020-07-20</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="../../../17/Linux/Process-Id/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="../../../17/Linux/Process-Id/" class="title">Process Id</a></p>
+                            <p class="item-date"><time datetime="2020-07-16T16:15:30.000Z" itemprop="datePublished">2020-07-17</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="" class="title">Debug in Linux</a></p>
+                            <p class="item-date"><time datetime="2020-07-11T01:35:01.000Z" itemprop="datePublished">2020-07-11</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="../../../08/Linux/shell-shortcut/" class="thumbnail">
+    
+    
+        <span style="background-image:url(https://www.ostechnix.com/wp-content/uploads/2018/02/CTRLW-1.gif)" alt="shell keyboard shortcut" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="../../../08/Linux/shell-shortcut/" class="title">shell keyboard shortcut</a></p>
+                            <p class="item-date"><time datetime="2020-07-07T16:09:01.000Z" itemprop="datePublished">2020-07-08</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="../../../../../2019/11/18/git/" class="thumbnail">
+    
+    
+        <span class="thumbnail-image thumbnail-none"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="../../../../../2019/11/18/git/" class="title">git</a></p>
+                            <p class="item-date"><time datetime="2019-11-18T04:02:53.000Z" itemprop="datePublished">2019-11-18</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="../../../../../categories/Programming/">Programming</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="../../../../../archives/2020/07/">July 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="../../../../../archives/2019/11/">November 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="../../../../../archives/2019/08/">August 2019</a><span class="archive-list-count">12</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/Data-Science/" rel="tag">Data Science</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/Debug-in-Linux/" rel="tag">Debug in Linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/Jupyter-Notebook/" rel="tag">Jupyter Notebook</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/Linux/" rel="tag">Linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/Machine-Learning/" rel="tag">Machine Learning</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/Network-command/" rel="tag">Network command</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/check-process-id/" rel="tag">check process id</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/conda/" rel="tag">conda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/cuda/" rel="tag">cuda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/docker/" rel="tag">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/git/" rel="tag">git</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/modules/" rel="tag">modules</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/packages/" rel="tag">packages</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/pip/" rel="tag">pip</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/protocol-buffer/" rel="tag">protocol buffer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/python/" rel="tag">python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/rsync/" rel="tag">rsync</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/shell/" rel="tag">shell</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/ssh/" rel="tag">ssh</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/virtualenv/" rel="tag">virtualenv</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/windows/" rel="tag">windows</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="../../../../../tags/wsl/" rel="tag">wsl</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="../../../../../tags/Data-Science/" style="font-size: 10px;">Data Science</a> <a href="../../../../../tags/Debug-in-Linux/" style="font-size: 10px;">Debug in Linux</a> <a href="../../../../../tags/Jupyter-Notebook/" style="font-size: 10px;">Jupyter Notebook</a> <a href="../../../../../tags/Linux/" style="font-size: 10px;">Linux</a> <a href="../../../../../tags/Machine-Learning/" style="font-size: 10px;">Machine Learning</a> <a href="../../../../../tags/Network-command/" style="font-size: 10px;">Network command</a> <a href="../../../../../tags/check-process-id/" style="font-size: 10px;">check process id</a> <a href="../../../../../tags/conda/" style="font-size: 10px;">conda</a> <a href="../../../../../tags/cuda/" style="font-size: 10px;">cuda</a> <a href="../../../../../tags/docker/" style="font-size: 10px;">docker</a> <a href="../../../../../tags/git/" style="font-size: 10px;">git</a> <a href="../../../../../tags/modules/" style="font-size: 10px;">modules</a> <a href="../../../../../tags/packages/" style="font-size: 10px;">packages</a> <a href="../../../../../tags/pip/" style="font-size: 10px;">pip</a> <a href="../../../../../tags/protocol-buffer/" style="font-size: 10px;">protocol buffer</a> <a href="../../../../../tags/python/" style="font-size: 20px;">python</a> <a href="../../../../../tags/rsync/" style="font-size: 10px;">rsync</a> <a href="../../../../../tags/shell/" style="font-size: 15px;">shell</a> <a href="../../../../../tags/ssh/" style="font-size: 15px;">ssh</a> <a href="../../../../../tags/virtualenv/" style="font-size: 10px;">virtualenv</a> <a href="../../../../../tags/windows/" style="font-size: 10px;">windows</a> <a href="../../../../../tags/wsl/" style="font-size: 10px;">wsl</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">links</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a target="_blank" rel="noopener" href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="../../../../../index.html" class="logo"></a>
+                </h1>
+                <p>&copy; 2021 YANG Tao</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'http://yoursite.com/2020/07/11/Linux/Debug%20in%20Linux/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        
+<script src="../../../../../libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="../../../../../libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="../../../../../libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="../../../../../libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="../../../../../libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="../../../../../libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="../../../../../libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="../../../../../libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="../../../../../libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="../../../../../libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="../../../../../js/main.js"></script>
+
+
+    </div>
+</body>
+</html>
