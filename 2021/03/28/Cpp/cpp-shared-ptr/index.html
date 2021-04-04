@@ -3,24 +3,23 @@
 <head>
     <meta charset="utf-8">
     
-    <title>Process Id | Personal Blog Web</title>
+    <title>shared_ptr memory layout | Personal Blog Web</title>
     
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
-        <meta name="keywords" content="Linux,check process id" />
+        <meta name="keywords" content="shared_ptr memory layout" />
     
-    <meta name="description" content="1. ps# 12345678910111213141516# all process&gt; ps -efUID        PID  PPID  C STIME TTY          TIME CMD&gt; ps -auxUSER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND## PID: co">
+    <meta name="description" content="Source Debug     Source# 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253&#x2F;&#x2F; memory.cpp#include &lt;memory&gt;#include &lt;vector&gt;#include &lt;ios">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Process Id">
-<meta property="og:url" content="http://yoursite.com/2020/07/17/Linux/Process-Id/index.html">
+<meta property="og:title" content="shared_ptr memory layout">
+<meta property="og:url" content="http://yoursite.com/2021/03/28/Cpp/cpp-shared-ptr/index.html">
 <meta property="og:site_name" content="Personal Blog Web">
-<meta property="og:description" content="1. ps# 12345678910111213141516# all process&gt; ps -efUID        PID  PPID  C STIME TTY          TIME CMD&gt; ps -auxUSER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND## PID: co">
+<meta property="og:description" content="Source Debug     Source# 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253&#x2F;&#x2F; memory.cpp#include &lt;memory&gt;#include &lt;vector&gt;#include &lt;ios">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-07-16T16:15:30.000Z">
-<meta property="article:modified_time" content="2021-03-28T09:22:32.346Z">
+<meta property="article:published_time" content="2021-03-28T11:28:55.000Z">
+<meta property="article:modified_time" content="2021-04-04T14:51:24.557Z">
 <meta property="article:author" content="YANG Tao">
-<meta property="article:tag" content="Linux">
-<meta property="article:tag" content="check process id">
+<meta property="article:tag" content="shared_ptr memory layout">
 <meta name="twitter:card" content="summary">
     
 
@@ -148,18 +147,18 @@
                         <div class="main-body-header">
     <h1 class="header">
     
-    <a class="page-title-link" href="../../../../../categories/Linux/">Linux</a>
+    <a class="page-title-link" href="../../../../../categories/Cpp/">Cpp</a>
     </h1>
 </div>
                         <div class="main-body-content">
-                            <article id="post-Linux/Process-Id" class="article article-single article-type-post" itemscope itemprop="blogPost">
+                            <article id="post-Cpp/cpp-shared-ptr" class="article article-single article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             <header class="article-header">
                 
     
         <h1 class="article-title" itemprop="name">
-        Process Id
+        shared_ptr memory layout
         </h1>
     
 
@@ -170,33 +169,32 @@
                 
     <div class="article-date">
         <a href="" class="article-date">
-            <time datetime="2020-07-16T16:15:30.000Z" itemprop="datePublished">2020-07-17</time>
+            <time datetime="2021-03-28T11:28:55.000Z" itemprop="datePublished">2021-03-28</time>
         </a>
     </div>
 
                 
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link-link" href="../../../../../tags/Linux/" rel="tag">Linux</a>, <a class="tag-link-link" href="../../../../../tags/check-process-id/" rel="tag">check process id</a>
+        <a class="tag-link-link" href="../../../../../tags/shared-ptr-memory-layout/" rel="tag">shared_ptr memory layout</a>
     </div>
 
             </div>
         
         
         <div class="article-entry" itemprop="articleBody">
-            <h2><span id="p-1-ps"> 1. ps</span><a href="#p-1-ps" class="header-anchor">#</a></h2>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> all process</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> ps -ef</span></span><br><span class="line">UID        PID  PPID  C STIME TTY          TIME CMD</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> ps -aux</span></span><br><span class="line">USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># PID: column 9-15</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># get speacial process PID</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> ps -ef | grep CMD-NAME | grep -v grep | cut -c 9-15</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> ps -aux | grep CMD-NAME | grep -v grep | cut -c 9-15</span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># ignore grep --color=auto,</span></span>  </span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># If the pattern had been written without the square brackets, it would have matched not only the ps output line for cron, but also the ps output line for grep.</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># https://www.gnu.org/software/grep/manual/grep.html</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> ps -ef | grep  [i]nit</span></span><br></pre></td></tr></table></figure>
-<h2><span id="p-2-pidof"> 2. </span><a href="#p-2-pidof" class="header-anchor">#</a></h2>
-<p>find the process ID of a running program</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash"> &gt; ps -ef | grep /i</span></span><br><span class="line">root         1     0  0 Jul16 ?        00:00:00 /init</span><br><span class="line">root         6     1  0 Jul16 ?        00:00:00 /init</span><br><span class="line">root         7     6  0 Jul16 ?        00:00:01 /init</span><br><span class="line">root      2496     1  0 00:17 ?        00:00:00 /init</span><br><span class="line">root      2497  2496  0 00:17 ?        00:00:00 /init</span><br><span class="line">yang      2813  2498  0 00:51 pts/1    00:00:00 grep --color=auto /i</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> pidof /init</span></span><br><span class="line">2497 2496 7 6 1</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> select one</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> pidof /init | awk <span class="string">&#x27;&#123;print $1&#125;&#x27;</span></span></span><br><span class="line">2497</span><br></pre></td></tr></table></figure>
-<h2><span id="p-3-pgrep-pkill"> 3. /</span><a href="#p-3-pgrep-pkill" class="header-anchor">#</a></h2>
-<p>It searches for all the named <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Process_(computing)">processes</a> that can be specified as extended <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Regular_expression">regular expression</a> patterns, and—by default—returns their <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Process_identifier">process ID</a>.</p>
-<p><strong>The running <code>pgrep</code> or <code>pkill</code> process will never report itself as a match.</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pgrep -u root sshd</span></span><br><span class="line"></span><br><span class="line">   will only list the processes called sshd AND owned by root.  On the other hand,</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> pgrep -u root,daemon</span></span><br><span class="line"></span><br><span class="line">   will list the processes owned by root OR daemon.</span><br><span class="line">   </span><br><span class="line"><span class="meta">#</span><span class="bash"> a little bug, pattern don<span class="string">&#x27;t  using &#x27;</span>/<span class="string">&#x27; at the beginning. It auto append &#x27;</span>*<span class="string">&#x27; at the begin/end of pattern string</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> pgrep pattern</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> ps -ef | grep init</span></span><br><span class="line">root         1     0  0 Jul16 ?        00:00:00 /init</span><br><span class="line">root         6     1  0 Jul16 ?        00:00:00 /init</span><br><span class="line">root         7     6  0 Jul16 ?        00:00:01 /init</span><br><span class="line">root      2496     1  0 00:17 ?        00:00:00 /init</span><br><span class="line">root      2497  2496  0 00:17 ?        00:00:00 /init</span><br><span class="line">yang      2813  2498  0 00:51 pts/1    00:00:00 grep --color=auto /i</span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> pgrep  init</span></span><br><span class="line">1</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">2496</span><br><span class="line">2497</span><br></pre></td></tr></table></figure>
-<h3><span id="p-please-use-f-option"> please use -f option</span><a href="#p-please-use-f-option" class="header-anchor">#</a></h3>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> -f, --full                use full process name to match</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> pgrep -f process-name</span></span><br></pre></td></tr></table></figure>
-<h2><span id="p-the-difference-between-pidof-and-pgrep"> </span><a href="#p-the-difference-between-pidof-and-pgrep" class="header-anchor">#</a></h2>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> he equivalence is actually:</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> pidof <span class="string">&#x27;program&#x27;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> pgrep <span class="string">&#x27;^program$&#x27;</span></span></span><br></pre></td></tr></table></figure>
+            <div class="toc">
+<!-- toc -->
+<ul>
+<li><a href="#source">Source</a></li>
+<li><a href="#debug">Debug</a></li>
+</ul>
+<!-- tocstop -->
+</div>
+<h1><span id="p-source"> Source</span><a href="#p-source" class="header-anchor">#</a></h1>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// memory.cpp</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> VecUL = std::vector&lt;<span class="keyword">unsigned</span> <span class="keyword">long</span>&gt;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(std::shared_ptr&lt;VecUL&gt; datas)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> count = datas.<span class="built_in">use_count</span>();</span><br><span class="line">    std::cout &lt;&lt; count &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;data : *datas) &#123;</span><br><span class="line">        data++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(std::shared_ptr&lt;<span class="keyword">unsigned</span> <span class="keyword">int</span>&gt; data)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> count = data.<span class="built_in">use_count</span>();</span><br><span class="line">    std::cout &lt;&lt; count &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::shared_ptr&lt;<span class="keyword">unsigned</span> <span class="keyword">int</span>&gt; ptr = std::make_shared&lt;<span class="keyword">unsigned</span> <span class="keyword">int</span>&gt;();</span><br><span class="line">    <span class="keyword">auto</span> count = ptr.<span class="built_in">use_count</span>();</span><br><span class="line">    std::cout &lt;&lt; count &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">    *ptr = <span class="number">65535</span>;</span><br><span class="line">    <span class="built_in">func</span>(ptr);</span><br><span class="line"></span><br><span class="line">    std::shared_ptr&lt;VecUL&gt; ptr1 = std::make_shared&lt;VecUL&gt;();</span><br><span class="line">    <span class="keyword">auto</span> count1 = ptr1.<span class="built_in">use_count</span>();</span><br><span class="line">    std::cout &lt;&lt; count1 &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">    ptr1-&gt;<span class="built_in">push_back</span>(<span class="number">65535</span>);</span><br><span class="line">    ptr1-&gt;<span class="built_in">push_back</span>(<span class="number">65535</span>);</span><br><span class="line">    ptr1-&gt;<span class="built_in">push_back</span>(<span class="number">65535</span>);</span><br><span class="line">    ptr1-&gt;<span class="built_in">push_back</span>(<span class="number">65535</span>);</span><br><span class="line">    ptr1-&gt;<span class="built_in">push_back</span>(<span class="number">65535</span>);</span><br><span class="line">    <span class="built_in">func</span>(ptr1);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> __<span class="title">shared_ptr</span> &#123;</span></span><br><span class="line">    element_type*	   _M_ptr;         <span class="comment">// Contained pointer.</span></span><br><span class="line">    __shared_count&lt;_Lp&gt;  _M_refcount;    <span class="comment">// Reference counter.</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> __<span class="title">shared_count</span> &#123;</span></span><br><span class="line">	_Sp_counted_base&lt;_Lp&gt;*  _M_pi;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> _<span class="title">Sp_counted_base</span></span></span><br><span class="line"><span class="class">    </span></span><br><span class="line"><span class="class">    _<span class="title">Atomic_word</span>  _<span class="title">M_use_count</span>;</span>     <span class="comment">// #shared</span></span><br><span class="line">    _Atomic_word  _M_weak_count;    <span class="comment">// #weak + (#shared != 0)</span></span><br><span class="line">   _Impl _M_impl;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1><span id="p-debug"> Debug</span><a href="#p-debug" class="header-anchor">#</a></h1>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">      </span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> g++ -g -O1 memory.cpp -o memory</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> gdb memory</span></span><br><span class="line"></span><br><span class="line">(gdb) br func</span><br><span class="line">Breakpoint 1 at 0x12e9: func. (2 locations)</span><br><span class="line">(gdb) run</span><br><span class="line">Breakpoint 1, func (data=std::shared_ptr&lt;unsigned int&gt; (use count 2, weak count 0) = &#123;...&#125;) at memory.cpp:15</span><br><span class="line"></span><br><span class="line">(gdb) x /3gx  $rdi</span><br><span class="line">                # element_type*       # _Sp_counted_base&lt;_Lp&gt;*</span><br><span class="line">0x7fffffffdaa0: 0x000055555556aec0      0x000055555556aeb0</span><br><span class="line">0x7fffffffdab0: 0x00007ffff7dc2fc8</span><br><span class="line"></span><br><span class="line">(gdb) x /2gx 0x000055555556aec0</span><br><span class="line">                # Contained</span><br><span class="line">0x55555556aec0: 0x000000000000ffff      0x0000000000000411</span><br><span class="line"></span><br><span class="line">(gdb) x /4gx 0x000055555556aeb0</span><br><span class="line">                # vtable pointer   #_M_weak_count #_M_use_count     </span><br><span class="line">0x55555556aeb0: 0x0000555555557c78      0x0000000100000002</span><br><span class="line">			   # Contained</span><br><span class="line">0x55555556aec0: 0x000000000000ffff      0x0000000000000411</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br><span class="line">Breakpoint 1, func (</span><br><span class="line">    datas=std::shared_ptr&lt;std::vector&lt;unsigned long, std::allocator&lt;unsigned long&gt; &gt;&gt; (use count 2, weak count 0) = &#123;...&#125;) at memory.cpp:7</span><br><span class="line"></span><br><span class="line">(gdb) x /3gx  $rdi</span><br><span class="line">                # element_type*       # _Sp_counted_base&lt;_Lp&gt;*</span><br><span class="line">0x7fffffffdaa0: 0x000055555556b2f0      0x000055555556b2e0</span><br><span class="line">0x7fffffffdab0: 0x00007ffff7dc2fc8</span><br><span class="line">(gdb) x /4gx  0x000055555556b2f0</span><br><span class="line">			  # vector Contained</span><br><span class="line">0x55555556b2f0: 0x000055555556b380      0x000055555556b3a8</span><br><span class="line">0x55555556b300: 0x000055555556b3c0      0x0000000000000021</span><br><span class="line">(gdb) x /6gx 0x000055555556b380</span><br><span class="line">		       # vector data</span><br><span class="line">0x55555556b380: 0x000000000000ffff      0x000000000000ffff</span><br><span class="line">0x55555556b390: 0x000000000000ffff      0x000000000000ffff</span><br><span class="line">0x55555556b3a0: 0x000000000000ffff      0x0000000000000000</span><br><span class="line"></span><br><span class="line">(gdb) x /6gx 0x000055555556b2e0</span><br><span class="line">                # vtable pointer      #_M_weak_count #_M_use_count </span><br><span class="line">0x55555556b2e0: 0x0000555555557cb0      0x0000000100000002</span><br><span class="line">                # Contained</span><br><span class="line">0x55555556b2f0: 0x000055555556b380      0x000055555556b3a8</span><br><span class="line">0x55555556b300: 0x000055555556b3c0      0x0000000000000021</span><br></pre></td></tr></table></figure>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
         </div>
         <footer class="article-footer">
@@ -204,7 +202,7 @@
 
 
 
-    <a data-url="http://yoursite.com/2020/07/17/Linux/Process-Id/" data-id="ckmj7572d000zzkf3bdqjdz3z" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://yoursite.com/2021/03/28/Cpp/cpp-shared-ptr/" data-id="ckn2tfjuj0000t4f33irp9ha2" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -349,20 +347,20 @@
         
 <nav id="article-nav">
     
-        <a href="../../../20/Linux/gdb/" id="article-nav-newer" class="article-nav-link-wrap">
+        <a href="../cpp-map/" id="article-nav-newer" class="article-nav-link-wrap">
         <strong class="article-nav-caption">newer</strong>
         <p class="article-nav-title">
         
-            gdb
+            map memory layout
         
         </p>
         <i class="icon fa fa-chevron-right" id="icon-chevron-right"></i>
     </a>
     
     
-        <a href="../../../11/Linux/Debug%20in%20Linux/" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="../cpp-vector/" id="article-nav-older" class="article-nav-link-wrap">
         <strong class="article-nav-caption">older</strong>
-        <p class="article-nav-title">Debug in Linux</p>
+        <p class="article-nav-title">vector memory layout</p>
         <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
         </a>
     
@@ -381,7 +379,7 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="../../../../../2021/03/29/Cpp/cpp-string/" class="thumbnail">
+                            <a href="../../../29/Cpp/cpp-string/" class="thumbnail">
     
     
         <span class="thumbnail-image thumbnail-none"></span>
@@ -393,7 +391,7 @@
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="../../../../../categories/Cpp/">Cpp</a></p>
-                            <p class="item-title"><a href="../../../../../2021/03/29/Cpp/cpp-string/" class="title">string memory layout</a></p>
+                            <p class="item-title"><a href="../../../29/Cpp/cpp-string/" class="title">string memory layout</a></p>
                             <p class="item-date"><time datetime="2021-03-28T16:08:32.000Z" itemprop="datePublished">2021-03-29</time></p>
                         </div>
                     </li>
@@ -401,7 +399,7 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="../../../../../2021/03/28/Cpp/cpp-tuple/" class="thumbnail">
+                            <a href="../cpp-tuple/" class="thumbnail">
     
     
         <span class="thumbnail-image thumbnail-none"></span>
@@ -413,7 +411,7 @@
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="../../../../../categories/Cpp/">Cpp</a></p>
-                            <p class="item-title"><a href="../../../../../2021/03/28/Cpp/cpp-tuple/" class="title">tuple memory layout</a></p>
+                            <p class="item-title"><a href="../cpp-tuple/" class="title">tuple memory layout</a></p>
                             <p class="item-date"><time datetime="2021-03-28T15:37:51.000Z" itemprop="datePublished">2021-03-28</time></p>
                         </div>
                     </li>
@@ -421,7 +419,7 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="../../../../../2021/03/28/Cpp/cpp-map/" class="thumbnail">
+                            <a href="../cpp-map/" class="thumbnail">
     
     
         <span class="thumbnail-image thumbnail-none"></span>
@@ -433,7 +431,7 @@
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="../../../../../categories/Cpp/">Cpp</a></p>
-                            <p class="item-title"><a href="../../../../../2021/03/28/Cpp/cpp-map/" class="title">map memory layout</a></p>
+                            <p class="item-title"><a href="../cpp-map/" class="title">map memory layout</a></p>
                             <p class="item-date"><time datetime="2021-03-28T11:28:55.000Z" itemprop="datePublished">2021-03-28</time></p>
                         </div>
                     </li>
@@ -441,7 +439,7 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="../../../../../2021/03/28/Cpp/cpp-shared-ptr/" class="thumbnail">
+                            <a href="" class="thumbnail">
     
     
         <span class="thumbnail-image thumbnail-none"></span>
@@ -453,7 +451,7 @@
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="../../../../../categories/Cpp/">Cpp</a></p>
-                            <p class="item-title"><a href="../../../../../2021/03/28/Cpp/cpp-shared-ptr/" class="title">shared_ptr memory layout</a></p>
+                            <p class="item-title"><a href="" class="title">shared_ptr memory layout</a></p>
                             <p class="item-date"><time datetime="2021-03-28T11:28:55.000Z" itemprop="datePublished">2021-03-28</time></p>
                         </div>
                     </li>
@@ -461,7 +459,7 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="../../../../../2021/03/28/Cpp/cpp-vector/" class="thumbnail">
+                            <a href="../cpp-vector/" class="thumbnail">
     
     
         <span style="background-image:url(https://images.unsplash.com/photo-1524275804141-5e9f2bc5a71d?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1050&q=80)" alt="vector memory layout" class="thumbnail-image"></span>
@@ -473,7 +471,7 @@
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="../../../../../categories/Cpp/">Cpp</a></p>
-                            <p class="item-title"><a href="../../../../../2021/03/28/Cpp/cpp-vector/" class="title">vector memory layout</a></p>
+                            <p class="item-title"><a href="../cpp-vector/" class="title">vector memory layout</a></p>
                             <p class="item-date"><time datetime="2021-03-28T09:43:40.000Z" itemprop="datePublished">2021-03-28</time></p>
                         </div>
                     </li>
@@ -555,7 +553,7 @@
     var disqus_shortname = 'hexo-theme-hueman';
     
     
-    var disqus_url = 'http://yoursite.com/2020/07/17/Linux/Process-Id/';
+    var disqus_url = 'http://yoursite.com/2021/03/28/Cpp/cpp-shared-ptr/';
     
     (function() {
     var dsq = document.createElement('script');
